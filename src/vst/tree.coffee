@@ -203,7 +203,12 @@ class Tree extends Entity
         heap.pop()
         heap.push(curr)
         curr = curr.greater_neighbor()
-    heap
+      upper_key = heap.peek().key()
+      while heap.peak()
+        node = heap.pop()
+      RangeIterator.of(node, upper_key, @comparator())
+    else
+      RangeIterator.empty()
 
 Entity.def_abstract_methods(Tree, {
   add_descendant: {arity: 2}
