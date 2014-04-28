@@ -7,11 +7,7 @@ global =
     this
 
 m = metrics = {
-  m_number: (a,b) ->
-    if a.key() < b.key()
-      a.key() - b.key()
-    else
-      b.key() - a.key()
+  m_number: (a,b) -> Math.abs(a.key() - b.key())
 }
 
 global.vst ||= {}
