@@ -1,0 +1,24 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+  runtime 'com.google.javascript:closure-compiler:v20131014'
+}
+
+task minify_vinary_search_tree(type: JavaExec) {
+  main = 'com.google.javascript.jscomp.CommandLineRunner'
+  classpath = sourceSets.main.runtimeClasspath
+  args = [
+    '--compilation_level', 'SIMPLE_OPTIMIZATIONS',
+    //'--output_wrapper', '(function(){"use strict";%output%}());',
+    '--js_output_file', 'lib/vinary-search-tree/vinary-search-tree.min.js',
+    '--js', 'lib/vinary-search-tree/vinary-search-tree.js'
+  ]
+}
+
+task minify(dependsOn: [
+  'minify_vinary_search_tree'
+])

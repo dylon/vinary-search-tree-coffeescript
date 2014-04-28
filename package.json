@@ -1,0 +1,39 @@
+{
+  "name": "vinary-search-tree",
+  "version": "1.0.0",
+  "description": "CoffeeScript / JavaScript implementation of my DLL-BEST data structure (i.e. Binary Search Tree with Vine)",
+  "keywords": [
+  	"javascript",
+  	"coffeescript"
+  ],
+  "homepage": "https://github.com/dylon/vinary-search-tree-coffeescript",
+  "bugs": "https://github.com/dylon/vinary-search-tree-coffeescript/issues",
+  "license": "MIT",
+  "author": "Dylon Edwards",
+  "contributors": [
+  	{
+  		"name": "Dylon Edwards",
+  		"email": "dylon.edwards@gmail.com"
+  	}
+  ],
+  "main": "./lib/vinary-search-tree/index",
+  "directories": {
+  	"lib": "./lib/vinary-search-tree"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dylon/vinary-search-tree-coffeescript.git"
+  },
+  "devDependencies": {
+    "nodeunit": "~0.8.6",
+    "coffee-script": "~1.7.1",
+    "wrench": "~1.5.8",
+    "docco": "~0.6.3"
+  },
+  "engines": {
+    "node": "~0.10.26"
+  },
+  "scripts": {
+  	"test": "node ./node_modules/coffee-script/bin/cake test"
+  }
+}
