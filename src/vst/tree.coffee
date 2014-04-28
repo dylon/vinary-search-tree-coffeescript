@@ -203,9 +203,13 @@ class Tree extends Entity
         heap.pop()
         heap.push(curr)
         curr = curr.greater_neighbor()
-      upper_key = heap.peek().key()
-      while heap.peak()
-        node = heap.pop()
+      node = heap.pop()
+      upper_key = node.key()
+      while curr = heap.pop()
+        if @comparator()(curr.key(), node.key()) < 0
+          node = curr
+        if @comparator()(curr.key(), upper_key) > 0
+          upper_key = curr.key()
       RangeIterator.of(node, upper_key, @comparator())
     else
       RangeIterator.empty()
