@@ -43,10 +43,21 @@ build = (watch, callback) ->
         countdown.decrement()
 
     concat_files 'lib/vinary-search-tree/vinary-search-tree.js', do ->
-      lib_files = []
-      for file in wrench.readdirSyncRecursive('lib/vinary-search-tree')
-        lib_files.push("lib/vinary-search-tree/#{file}") if /\.js$/.test(file)
-      lib_files
+      lib_files = [
+        'comparators'
+        'metrics'
+        'predicates'
+        'functions'
+        'entity'
+        'max_heap'
+        'iterator'
+        'node'
+        'range_iterator'
+        'tree'
+        'avl_node'
+        'avl_tree'
+      ]
+      lib_files.map (fname) -> "lib/vinary-search-tree/vst/#{fname}.js"
 
     countdown.decrement()
 

@@ -1,7 +1,7 @@
-if typeof exports isnt undefined
+if typeof exports isnt 'undefined'
   global = exports
   p = require('./predicates').vst.predicates
-else if typeof window isnt undefined
+else if typeof window isnt 'undefined'
   global = window
   p = window.vst.predicates
 else

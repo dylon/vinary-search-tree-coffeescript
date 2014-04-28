@@ -1,7 +1,7 @@
 global =
-  if typeof exports isnt undefined
+  if typeof exports isnt 'undefined'
     exports
-  else if typeof window isnt undefined
+  else if typeof window isnt 'undefined'
     window
   else
     this

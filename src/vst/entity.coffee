@@ -1,8 +1,8 @@
-if typeof exports isnt undefined
+if typeof exports isnt 'undefined'
   global = exports
   p = require('./predicates').vst.predicates
   f = require('./functions').vst.functions
-else if typeof window isnt undefined
+else if typeof window isnt 'undefined'
   global = window
   p = window.vst.predicates
   f = window.vst.functions
@@ -148,7 +148,7 @@ class Entity
       throw new Error("Expected #{f.to_string subtypes} to be an array")
     abstract_methods = {}
     for subtype in subtypes
-      if subtype isnt undefined
+      if subtype isnt `undefined`
         unless p.is_function(subtype) and subtype.prototype instanceof Entity and this instanceof subtype
           throw new Error("#{subtype.name} must be of type Entity")
         if subtype.__ABSTRACT_METHODS__
