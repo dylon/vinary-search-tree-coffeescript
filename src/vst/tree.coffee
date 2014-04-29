@@ -3,6 +3,7 @@ if typeof exports isnt 'undefined'
   Entity = require('./entity').vst.Entity
   Node = require('./node').vst.Node
   RangeIterator = require('./range_iterator').vst.RangeIterator
+  NearestNeighborIterator = require('./nearest_neighbor_iterator').vst.NearestNeighborIterator
   MaxHeap = require('./max_heap').vst.MaxHeap
   p = require('./predicates').vst.predicates
   f = require('./functions').vst.functions
@@ -11,6 +12,7 @@ else if typeof window isnt 'undefined'
   Entity = window.vst.Entity
   Node = window.vst.Node
   RangeIterator = window.vst.RangeIterator
+  NearestNeighborIterator = window.vst.NearestNeighborIterator
   MaxHeap = window.vst.MaxHeap
   p = window.vst.predicates
   f = window.vst.functions
@@ -19,6 +21,7 @@ else
   Entity = this.vst.Entity
   Node = this.vst.Node
   RangeIterator = this.vst.RangeIterator
+  NearestNeighborIterator = this.vst.NearestNeighborIterator
   MaxHeap = this.vst.MaxHeap
   p = this.vst.predicates
   f = this.vst.functions
@@ -204,16 +207,9 @@ class Tree extends Entity
         heap.pop()
         heap.push(curr)
         curr = curr.greater_neighbor()
-      node = heap.pop()
-      upper_key = node.key()
-      while curr = heap.pop()
-        if @comparator()(curr.key(), node.key()) < 0
-          node = curr
-        if @comparator()(curr.key(), upper_key) > 0
-          upper_key = curr.key()
-      RangeIterator.of(node, upper_key, @comparator())
+      NearestNeighborIterator.of(heap)
     else
-      RangeIterator.empty()
+      NearestNeighborIterator.empty()
 
 Entity.def_abstract_methods(Tree, {
   add_descendant: {arity: 2}
