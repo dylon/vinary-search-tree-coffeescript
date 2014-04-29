@@ -30,6 +30,30 @@ class Iterator extends Entity
     next_element = @next_element()
     @next_element(null)
     next_element
+  map: (fn) ->
+    mapped = []
+    index = 0
+    while @has_next()
+      unmapped = @next()
+      mapped.push fn.call(unmapped, unmapped, index)
+      index += 1
+    mapped
+  each: (fn) ->
+    index = 0
+    while @has_next()
+      element = @next()
+      fn.call(element, element, index)
+      index += 1
+    null
+  select: (is_valid) ->
+    valid = []
+    index = 0
+    while @has_next()
+      candidate = @next()
+      if is_valid.call(candidate, candidate, index)
+        valid.push candidate
+      index += 1
+    valid
 
 Entity.def_abstract_methods(Iterator, {
   advance: {arity: 0}

@@ -128,14 +128,24 @@ class Entity
     f.assert p.is_object abstract_methods
     for own abstract_method, attrs of abstract_methods
       @def_abstract_method(ctor, abstract_method, attrs)
+  @find_property: (ctor, property) ->
+    f.assert is_entity(ctor.prototype)
+    f.assert p.is_string(property)
+    if p.is_function ctor::[property]
+      ctor::[property]
+    else if ctor.__super__ and is_entity ctor.__super__.prototype
+      @find_property(ctor.__super__, property)
+    else
+      null
   @def_toString: (ctor, ctor_name) ->
     f.assert p.is_function(ctor) and is_entity(ctor.prototype)
     f.assert p.is_undefined(ctor_name) or p.is_string(ctor_name)
     ctor_name ||= ctor.name
     properties = []
-    for property in ctor.properties()
-      unless ctor::[property].__STRINGIFY__ is false
-        properties.push property
+    for property_name in ctor.properties()
+      if property = @find_property(ctor, property_name)
+        unless property.__STRINGIFY__ is false
+          properties.push property_name
     ctor::toString = () ->
       values = []
       for property in properties
@@ -174,6 +184,20 @@ class Entity
         throw new Error("#{f.to_string value} is invalid for #{property} according to #{is_valid} for #{f.to_string this}")
       validate(value)
     this
+  equals: (self, other) ->
+    if p.is_undefined(other)
+      other = self
+      self = this
+    if is_entity(self)
+      if is_entity(other)
+        for property in self.constructor.properties()
+          unless @equals(self[property](), other[property]())
+            return false
+        true
+      else
+        false
+    else
+      self is other
 
 is_entity = p.is_instance(Entity)
 

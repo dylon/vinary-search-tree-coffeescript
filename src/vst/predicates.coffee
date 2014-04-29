@@ -67,14 +67,14 @@ p = predicates = {
   there_exists: (is_valid) ->
     assert p.is_function(is_valid)
     (elements) ->
-      p.assert p.is_array(elements)
+      assert p.is_array(elements)
       for element in elements
         return true if is_valid.call(this, element) is true
       false
   for_all: (is_valid) ->
     assert p.is_function(is_valid)
     (elements) ->
-      p.assert p.is_array(elements)
+      assert p.is_array(elements)
       for element in elements
         return false if is_valid.call(this, element) is false
       true
@@ -90,7 +90,7 @@ p = predicates = {
         (value) -> f.call(this, value) || g.call(this, value)
       else
         [f, gs...] = fs
-        g = conjoin.apply(null, gs)
+        g = p.disjoin.apply(null, gs)
         (value) -> f.call(this, value) || g.call(this, value)
   conjoin: (fs...) ->
     switch fs.length
@@ -104,7 +104,7 @@ p = predicates = {
         (value) -> f.call(this, value) && g.call(this, value)
       else
         [f, gs...] = fs
-        g = conjoin.apply(null, gs)
+        g = p.conjoin.apply(null, gs)
         (value) -> f.call(this, value) && g.call(this, value)
 }
 
