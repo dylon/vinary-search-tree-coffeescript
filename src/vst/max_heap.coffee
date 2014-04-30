@@ -100,6 +100,10 @@ class MaxHeap
       p = parent(i)
     heap[i] = key
     null
+  clear: () ->
+    @heap.length = 0
+    @length = 0
+    null
   constructor: (@compare, @heap=[], @length=@heap.length) ->
     functions.assert predicates.is_array(@heap)
     functions.assert predicates.is_bounded(0, @heap.length)(@length)

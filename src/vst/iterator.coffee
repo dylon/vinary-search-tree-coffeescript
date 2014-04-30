@@ -44,9 +44,9 @@ class Iterator extends Entity
     index = 0
     while @has_next()
       element = @next()
-      fn.call(element, element, index)
+      return false if fn.call(element, element, index) is false
       index += 1
-    this
+    true
   select: (is_valid) -> SelectIterator.of(this, is_valid)
   exclude: (is_valid) -> ExcludeIterator.of(this, is_valid)
   take: (n) -> TakeIterator.of(this, n)

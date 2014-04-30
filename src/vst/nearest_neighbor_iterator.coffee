@@ -20,8 +20,58 @@ else
   p = this.vst.predicates
   f = this.vst.functions
 
+find_nearest = (key, node, lesser, greater, distance) ->
+  while true
+    if lesser
+      if greater
+        d_0 = distance(node.key(), key)
+        d_1 = distance(lesser.key(), key)
+        d_2 = distance(greater.key(), key)
+        if d_1 < d_0
+          if d_2 < d_1
+            node = greater
+            greater = greater.greater_neighbor()
+          else
+            node = lesser
+            lesser = lesser.lesser_neighbor()
+        else if d_2 < d_0
+          node = greater
+          greater = greater.greater_neighbor()
+        else
+          return node
+      else if distance(lesser.key(), key) < distance(node.key(), key)
+        node = lesser
+        lesser = lesser.lesser_neighbor()
+      else
+        return node
+    else if greater
+      if distance(greater.key(), key) < distance(node.key(), key)
+        node = greater
+        greater = greater.greater_neighbor()
+      else
+        return node
+    else
+      return node
+
 class NearestNeighborIterator extends Iterator
   @of: (node, key, k, distance) ->
+    f.assert node instanceof Node
+    f.assert p.is_defined(key)
+    f.assert p.is_non_negative_number(k)
+    f.assert p.is_function(distance)
+    lesser = node.lesser_neighbor()
+    greater = node.greater_neighbor()
+    node = find_nearest(key, node, lesser, greater, distance)
+    while lesser = node.lesser_neighbor()
+      if distance(lesser.key(), key) < distance(node.key(), key)
+        node = lesser
+      else
+        break
+    while greater = node.greater_neighbor()
+      if distance(greater.key(), key) < distance(node.key(), key)
+        node = greater
+      else
+        break
     iter = new NearestNeighborIterator()
       .distance(distance)
       .key(key)

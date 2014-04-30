@@ -57,7 +57,6 @@ class Tree extends Entity
     node
   try_insert: (key, value) ->
     f.assert p.is_defined(key)
-    f.assert p.is_defined(value)
     if p.is_null @root()
       @root @NodeType().of(key, value)
       @size(@size() + 1)
@@ -70,7 +69,6 @@ class Tree extends Entity
       false
   insert: (key, value) ->
     f.assert p.is_defined(key)
-    f.assert p.is_defined(value)
     if @root() is null
       @root @NodeType().of(key, value)
     else if node = @find(key)
@@ -184,12 +182,12 @@ class Tree extends Entity
       RangeIterator.of lower_node, upper_key, @comparator()
     else
       RangeIterator.empty()
-  nearest_neighbors: (key, k, key_distance) ->
+  nearest_neighbors: (key, k, distance) ->
     f.assert p.is_defined(key)
     f.assert p.is_non_negative_number(k)
-    f.assert p.is_function(key_distance) and key_distance.length is 2
+    f.assert p.is_function(distance) and distance.length is 2
     if node = @find_nearest(key)
-      NearestNeighborIterator.of(node, key, k, key_distance)
+      NearestNeighborIterator.of(node, key, k, distance)
     else
       NearestNeighborIterator.empty()
 
