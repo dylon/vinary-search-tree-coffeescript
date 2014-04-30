@@ -1,6 +1,6 @@
 {
   "name": "vinary-search-tree",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "CoffeeScript / JavaScript implementation of my DLL-BEST data structure (i.e. Binary Search Tree with Vine)",
   "keywords": [
   	"javascript",

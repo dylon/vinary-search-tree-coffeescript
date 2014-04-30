@@ -178,7 +178,7 @@ class Tree extends Entity
           greatest = greatest.greater_neighbor()
           n += 1
       lower_node = least || node
-      upper_key = greatest?.key() || node.key()
+      upper_key = if greatest then greatest.key() else node.key()
       RangeIterator.of lower_node, upper_key, @comparator()
     else
       RangeIterator.empty()
