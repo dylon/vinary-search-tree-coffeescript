@@ -3,7 +3,6 @@ if typeof exports isnt 'undefined'
   Entity = require('./entity').vst.Entity
   Iterator = require('./iterator').vst.Iterator
   Node = require('./node').vst.Node
-  MaxHeap = require('./max_heap').vst.MaxHeap
   p = require('./predicates').vst.predicates
   f = require('./functions').vst.functions
 else if typeof window isnt 'undefined'
@@ -11,7 +10,6 @@ else if typeof window isnt 'undefined'
   Entity = window.vst.Entity
   Iterator = window.vst.Iterator
   Node = window.vst.Node
-  MaxHeap = window.vst.MaxHeap
   p = window.vst.predicates
   f = windwow.vst.functions
 else
@@ -19,7 +17,6 @@ else
   Entity = this.vst.Entity
   Iterator = this.vst.Iterator
   Node = this.vst.Node
-  MaxHeap = this.vst.MaxHeap
   p = this.vst.predicates
   f = this.vst.functions
 
