@@ -44,7 +44,7 @@ class Iterator extends Entity
       element = @next()
       fn.call(element, element, index)
       index += 1
-    null
+    this
   select: (is_valid) ->
     valid = []
     index = 0
@@ -54,6 +54,15 @@ class Iterator extends Entity
         valid.push candidate
       index += 1
     valid
+  take: (n) ->
+    elements = []
+    i = -1; while (i += 1) < n and @has_next()
+      elements.push @next()
+    elements
+  drop: (n) ->
+    i = -1; while (i += 1) < n and @has_next()
+      @next()
+    this
 
 Entity.def_abstract_methods(Iterator, {
   advance: {arity: 0}

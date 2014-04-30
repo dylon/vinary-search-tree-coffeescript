@@ -184,30 +184,12 @@ class Tree extends Entity
       RangeIterator.of lower_node, upper_key, @comparator()
     else
       RangeIterator.empty()
-  nearest_neighbors: (key, k, key_distance, include_self=true) ->
+  nearest_neighbors: (key, k, key_distance) ->
     f.assert p.is_defined(key)
     f.assert p.is_non_negative_number(k)
     f.assert p.is_function(key_distance) and key_distance.length is 2
-    f.assert p.is_boolean(include_self)
-    node_distance = (a,b) ->
-      key_distance(a.key(), key) - key_distance(b.key(), key)
-    if k > 0 and node = @find_nearest(key)
-      heap = new MaxHeap(node_distance)
-      comp = @comparator()(node.key(), key)
-      heap.push(node) if comp is 0 and include_self
-      curr = if comp < 0 then node else node.lesser_neighbor()
-      while curr and heap.length < k
-        heap.push(curr)
-        curr = curr.lesser_neighbor()
-      curr = if comp > 0 then node else node.greater_neighbor()
-      while curr and heap.length < k
-        heap.push(curr)
-        curr = curr.greater_neighbor()
-      while curr and key_distance(curr.key(), key) < key_distance(heap.peek().key(), key)
-        heap.pop()
-        heap.push(curr)
-        curr = curr.greater_neighbor()
-      NearestNeighborIterator.of(heap)
+    if node = @find_nearest(key)
+      NearestNeighborIterator.of(node, key, k, key_distance)
     else
       NearestNeighborIterator.empty()
 

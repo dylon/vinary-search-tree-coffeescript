@@ -24,24 +24,54 @@ else
   f = this.vst.functions
 
 class NearestNeighborIterator extends Iterator
-  @of: (neighbors) ->
-    f.assert neighbors instanceof MaxHeap
-    neighbors.sort()
-    new NearestNeighborIterator().neighbors(neighbors.heap)
+  @of: (node, key, k, distance) ->
+    iter = new NearestNeighborIterator()
+      .distance(distance)
+      .key(key)
+      .k(k)
+    if k > 0
+      iter.next_element(node)
+        .greater_neighbor(node.greater_neighbor())
+        .lesser_neighbor(node.lesser_neighbor())
+        .i(1)
+    iter
   @empty: () -> new NearestNeighborIterator().neighbors([])
   constructor: (subtypes=[]) ->
     f.assert p.is_array(subtypes)
     subtypes.push(NearestNeighborIterator)
     super(subtypes)
   advance: () ->
-    if @next_element() is null and @index() < @neighbors().length
-      @next_element(@neighbors()[@index()])
-      @index(1 + @index())
+    if @next_element() is null and @i() < @k()
+      if @lesser_neighbor()
+        if @greater_neighbor()
+          d_lesser_neighbor = @distance()(@lesser_neighbor().key(), @key())
+          d_greater_neighbor = @distance()(@greater_neighbor().key(), @key())
+          if d_lesser_neighbor < d_greater_neighbor
+            @next_element(@lesser_neighbor())
+            @lesser_neighbor(@lesser_neighbor().lesser_neighbor())
+            @i(1 + @i())
+          else
+            @next_element(@greater_neighbor())
+            @greater_neighbor(@greater_neighbor().greater_neighbor())
+            @i(1 + @i())
+        else
+          @next_element(@lesser_neighbor())
+          @lesser_neighbor(@lesser_neighbor().lesser_neighbor())
+          @i(1 + @i())
+      else if @greater_neighbor()
+        @next_element(@greater_neighbor())
+        @greater_neighbor(@greater_neighbor().greater_neighbor())
+        @i(1 + @i())
     true
 
 Entity.def_properties(NearestNeighborIterator, {
-  neighbors: {is_valid: p.is_array}
-  index: {is_valid: p.is_non_negative_number, initial_value: 0}
+  node: {is_valid: p.is_instance(Node)}
+  lesser_neighbor: {is_valid: p.disjoin(p.is_instance(Node), p.is_null)}
+  greater_neighbor: {is_valid: p.disjoin(p.is_instance(Node), p.is_null)}
+  key: {is_valid: p.is_defined}
+  k: {is_valid: p.is_non_negative_number}
+  i: {is_valid: p.is_non_negative_number, initial_value: 0}
+  distance: {is_valid: p.is_function}
 })
 
 Entity.def_toString(NearestNeighborIterator)

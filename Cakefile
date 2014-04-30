@@ -53,6 +53,7 @@ build = (watch, callback) ->
         'iterator'
         'node'
         'range_iterator'
+        'nearest_neighbor_iterator'
         'tree'
         'avl_node'
         'avl_tree'
