@@ -20,7 +20,9 @@ else
   p = this.vst.predicates
   f = this.vst.functions
 
-find_nearest = (key, node, lesser, greater, distance) ->
+find_nearest = (key, node, distance) ->
+  lesser = node.lesser_neighbor()
+  greater = node.greater_neighbor()
   while true
     if lesser
       if greater
@@ -59,19 +61,7 @@ class NearestNeighborIterator extends Iterator
     f.assert p.is_defined(key)
     f.assert p.is_non_negative_number(k)
     f.assert p.is_function(distance)
-    lesser = node.lesser_neighbor()
-    greater = node.greater_neighbor()
-    node = find_nearest(key, node, lesser, greater, distance)
-    while lesser = node.lesser_neighbor()
-      if distance(lesser.key(), key) < distance(node.key(), key)
-        node = lesser
-      else
-        break
-    while greater = node.greater_neighbor()
-      if distance(greater.key(), key) < distance(node.key(), key)
-        node = greater
-      else
-        break
+    node = find_nearest(key, node, distance)
     iter = new NearestNeighborIterator()
       .distance(distance)
       .key(key)
