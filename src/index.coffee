@@ -7,6 +7,7 @@
 {vst: {Iterator}} = require './vst/iterator'
 {vst: {Node}} = require './vst/node'
 {vst: {RangeIterator}} = require './vst/range_iterator'
+{vst: {NearestNeighborIterator}} = require './vst/nearest_neighbor_iterator'
 {vst: {Tree}} = require './vst/tree'
 {vst: {AvlNode}} = require './vst/avl_node'
 {vst: {AvlTree}} = require './vst/avl_tree'
@@ -21,6 +22,7 @@ module.exports =
   Iterator: Iterator
   Node: Node
   RangeIterator: RangeIterator
+  NearestNeighborIterator: NearestNeighborIterator
   Tree: Tree
   AvlNode: AvlNode
   AvlTree: AvlTree
