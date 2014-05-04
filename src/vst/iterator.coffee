@@ -16,10 +16,6 @@ else
 
 class Iterator extends Entity
   Iterator: (subtypes=[]) ->
-    if this.constructor is Iterator
-      throw new Error("vst.Iterator should not be instantiated directly")
-    if subtypes.length is 0
-      throw new Error("You must specify the subtype as an array to this constructor")
     subtypes.push(Iterator)
     super(subtypes)
   has_next: () ->
@@ -40,7 +36,6 @@ class Iterator extends Entity
   mapref: (ref, args...) -> @map () -> @[ref].apply(this, args)
   map: (fn) -> MapIterator.of(this, fn)
   each: (fn) ->
-    f.assert p.is_function(fn)
     index = 0
     while @has_next()
       element = @next()
@@ -52,12 +47,10 @@ class Iterator extends Entity
   take: (n) -> TakeIterator.of(this, n)
   take_while: (is_valid) -> TakeWhileIterator.of(this, is_valid)
   drop: (n) ->
-    f.assert p.is_non_negative_number(n)
     i = -1; while (i += 1) < n and @has_next()
       @next()
     this
   drop_while: (is_valid) ->
-    f.assert p.is_function(is_valid)
     i = -1; while (i += 1) < n and @has_next()
       break unless is_valid.call(@peek(), @peek())
       @next()
@@ -68,7 +61,7 @@ Entity.def_abstract_methods(Iterator, {
 })
 
 Entity.def_properties(Iterator, {
-  next_element: {initial_value: null, is_valid: p.tautology}
+  next_element: {initial_value: null}
 })
 
 is_iterator = p.is_instance(Iterator)
@@ -77,7 +70,6 @@ class MapIterator extends Iterator
   @of: (iterator, fn) ->
     new MapIterator().iterator(iterator).fn(fn)
   constructor: (subtypes=[]) ->
-    f.assert p.is_array(subtypes)
     subtypes.push(MapIterator)
     super(subtypes)
   advance: () ->
@@ -88,9 +80,9 @@ class MapIterator extends Iterator
     true
 
 Entity.def_properties(MapIterator, {
-  iterator: {is_valid: is_iterator}
-  fn: {is_valid: p.is_function}
-  i: {is_valid: p.is_non_negative_number, initial_value: 0}
+  iterator: {}
+  fn: {}
+  i: {initial_value: 0}
 })
 
 Entity.def_toString(MapIterator)
@@ -99,7 +91,6 @@ class TakeIterator extends Iterator
   @of: (iterator, n) ->
     new TakeIterator().iterator(iterator).n(n)
   constructor: (subtypes=[]) ->
-    f.assert p.is_array(subtypes)
     subtypes.push(TakeIterator)
     super(subtypes)
   advance: () ->
@@ -108,9 +99,9 @@ class TakeIterator extends Iterator
     true
 
 Entity.def_properties(TakeIterator, {
-  iterator: {is_valid: is_iterator}
-  n: {is_valid: p.is_non_negative_number}
-  i: {is_valid: p.is_non_negative_number, initial_value: 0}
+  iterator: {}
+  n: {}
+  i: {initial_value: 0}
 })
 
 Entity.def_toString(TakeIterator)
@@ -119,7 +110,6 @@ class TakeWhileIterator extends Iterator
   @of: (iterator, is_valid) ->
     new TakeWhileIterator().iterator(iterator).n(is_valid)
   constructor: (subtypes=[]) ->
-    f.assert p.is_array(subtypes)
     subtypes.push(TakeWhileIterator)
     super(subtypes)
   advance: () ->
@@ -130,8 +120,8 @@ class TakeWhileIterator extends Iterator
     true
 
 Entity.def_properties(TakeWhileIterator, {
-  iterator: {is_valid: is_iterator}
-  is_valid: {is_valid: p.is_function}
+  iterator: {}
+  is_valid: {}
 })
 
 Entity.def_toString(TakeWhileIterator)
@@ -140,7 +130,6 @@ class SelectIterator extends Iterator
   @of: (iterator, is_valid) ->
     new SelectIterator().iterator(iterator).is_valid(is_valid)
   constructor: (subtypes=[]) ->
-    f.assert p.is_array(subtypes)
     subtypes.push(SelectIterator)
     super(subtypes)
   advance: () ->
@@ -152,8 +141,8 @@ class SelectIterator extends Iterator
     true
 
 Entity.def_properties(SelectIterator, {
-  iterator: {is_valid: is_iterator}
-  is_valid: {is_valid: p.is_function}
+  iterator: {}
+  is_valid: {}
 })
 
 Entity.def_toString(SelectIterator)
@@ -162,7 +151,6 @@ class ExcludeIterator extends Iterator
   @of: (iterator, is_valid) ->
     new ExcludeIterator().iterator(iterator).is_valid(is_valid)
   constructor: (subtypes=[]) ->
-    f.assert p.is_array(subtypes)
     subtypes.push(ExcludeIterator)
     super(subtypes)
   advance: () ->
@@ -174,8 +162,8 @@ class ExcludeIterator extends Iterator
     true
 
 Entity.def_properties(ExcludeIterator, {
-  iterator: {is_valid: is_iterator}
-  is_valid: {is_valid: p.is_function}
+  iterator: {}
+  is_valid: {}
 })
 
 Entity.def_toString(ExcludeIterator)

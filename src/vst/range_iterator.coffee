@@ -25,8 +25,6 @@ class RangeIterator extends Iterator
       .comparator(comparator)
   @empty: () -> @of null, -1, (a,b) -> 1
   constructor: (subtypes=[]) ->
-    unless this instanceof RangeIterator
-      return new RangeIterator(subtypes)
     subtypes.push(RangeIterator)
     super(subtypes)
   advance: () ->
@@ -37,14 +35,9 @@ class RangeIterator extends Iterator
     true
 
 Entity.def_properties(RangeIterator, {
-  comparator: {is_valid: p.conjoin(p.is_function, p.has_arity(2))}
-  node: {
-    is_valid: p.disjoin(
-      p.is_null,
-      p.is_instance(Node)
-    )
-  }
-  upper_key: {is_valid: p.tautology}
+  comparator: {}
+  node: {}
+  upper_key: {}
 })
 
 Entity.def_toString(RangeIterator)

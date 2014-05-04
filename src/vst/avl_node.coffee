@@ -42,7 +42,6 @@ is_avl_node = p.is_instance(AvlNode)
 Entity.def_properties(AvlNode, {
   parent: {
     initial_value: null
-    is_valid: p.disjoin(is_avl_node, p.is_null)
     stringify: false #-> avoid circular deps in toString() ...
   }
 })

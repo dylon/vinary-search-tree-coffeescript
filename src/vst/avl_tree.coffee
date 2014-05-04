@@ -31,7 +31,6 @@ class AvlTree extends Tree
     subtypes.push(AvlTree)
     super(subtypes)
   greater_greater_case: (a) ->
-    @assert_is_node_type(a)
     f = a.parent()
     b = a.greater_child()
     c = b.greater_child()
@@ -53,7 +52,6 @@ class AvlTree extends Tree
     @recompute_heights(b.parent())
     this
   greater_lesser_case: (a) ->
-    @assert_is_node_type(a)
     f = a.parent()
     b = a.greater_child()
     c = b.lesser_child()
@@ -80,7 +78,6 @@ class AvlTree extends Tree
     @recompute_heights(b)
     this
   lesser_lesser_case: (a) ->
-    @assert_is_node_type(a)
     f = a.parent()
     b = a.lesser_child()
     c = b.lesser_child()
@@ -102,7 +99,6 @@ class AvlTree extends Tree
     @recompute_heights(b.parent())
     this
   lesser_greater_case: (a) ->
-    @assert_is_node_type(a)
     f = a.parent()
     b = a.lesser_child()
     c = b.greater_child()
@@ -129,7 +125,6 @@ class AvlTree extends Tree
     @recompute_heights(b)
     this
   rebalance: (a) ->
-    @assert_is_node_type(a)
     balance = a.balance()
     if balance <= -2
       if a.greater_child().balance() <= 0
@@ -144,7 +139,6 @@ class AvlTree extends Tree
     this
   recompute_heights: (node) ->
     if p.is_defined(node)
-      @assert_is_node_type(node)
       changed = true
       while node and changed
         height = node.height()
@@ -157,8 +151,6 @@ class AvlTree extends Tree
         node = node.parent()
     this
   add_descendant: (ancestor, descendant) ->
-    @assert_is_node_type(ancestor)
-    @assert_is_node_type(descendant)
     comp = @comparator()(descendant.key(), ancestor.key())
     child = null
     if comp < 0
@@ -171,8 +163,6 @@ class AvlTree extends Tree
       @rebalance(child)
     this
   add_lesser_child: (parent, child) ->
-    @assert_is_node_type(parent)
-    @assert_is_node_type(child)
     child.greater_neighbor(parent)
     candidate = null
     if parent.lesser_child()
@@ -193,8 +183,6 @@ class AvlTree extends Tree
           node = node.parent()
     candidate
   add_greater_child: (parent, child) ->
-    @assert_is_node_type(parent)
-    @assert_is_node_type(child)
     child.lesser_neighbor(parent)
     candidate = null
     if parent.greater_child()
@@ -215,8 +203,6 @@ class AvlTree extends Tree
           node = node.parent()
     candidate
   add_equivalent_child: (parent, child) ->
-    @assert_is_node_type(parent)
-    @assert_is_node_type(child)
     parent.values(parent.values().concat(child.values()))
     child.lesser_neighbor(null)
     child.greater_neighbor(null)
@@ -226,7 +212,6 @@ class AvlTree extends Tree
     child.parent(null)
     null
   remove_node: (node) ->
-    @assert_is_node_type(node)
     node.values().length = 0
     if node.lesser_neighbor()
       node.lesser_neighbor(node.greater_neighbor())
@@ -240,7 +225,6 @@ class AvlTree extends Tree
       @swap_and_remove(node)
     this
   remove_leaf: (node) ->
-    @assert_is_node_type(node)
     if parent = node.parent()
       if parent.lesser_child() is node
         parent.lesser_child(null)
@@ -254,7 +238,6 @@ class AvlTree extends Tree
       @root(null)
     null
   remove_branch: (node) ->
-    @assert_is_node_type(node)
     if parent = node.parent()
       if parent.lesser_child()
         parent.lesser_child(node.greater_child() || node.lesser_child())
@@ -270,7 +253,6 @@ class AvlTree extends Tree
           @rebalance(node)
     null
   swap_and_remove: (node) ->
-    @assert_is_node_type(node)
     successor = @least(node.greater_child())
     @swap_nodes(node, successor)
     if node.height() is 0
@@ -279,8 +261,6 @@ class AvlTree extends Tree
       @remove_branch(node)
     null
   swap_nodes: (node_1, node_2) ->
-    @assert_is_node_type(node_1)
-    @assert_is_node_type(node_2)
     parent_1 = node_1.parent()
     lesser_child_1 = node_1.lesser_child()
     greater_child_1 = node_1.greater_child()

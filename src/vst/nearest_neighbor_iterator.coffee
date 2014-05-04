@@ -57,10 +57,6 @@ find_nearest = (key, node, distance) ->
 
 class NearestNeighborIterator extends Iterator
   @of: (node, key, k, distance) ->
-    f.assert node instanceof Node
-    f.assert p.is_defined(key)
-    f.assert p.is_non_negative_number(k)
-    f.assert p.is_function(distance)
     node = find_nearest(key, node, distance)
     iter = new NearestNeighborIterator()
       .distance(distance)
@@ -74,7 +70,6 @@ class NearestNeighborIterator extends Iterator
     iter
   @empty: () -> new NearestNeighborIterator().neighbors([])
   constructor: (subtypes=[]) ->
-    f.assert p.is_array(subtypes)
     subtypes.push(NearestNeighborIterator)
     super(subtypes)
   advance: () ->
@@ -102,13 +97,13 @@ class NearestNeighborIterator extends Iterator
     true
 
 Entity.def_properties(NearestNeighborIterator, {
-  node: {is_valid: p.is_instance(Node)}
-  lesser_neighbor: {is_valid: p.disjoin(p.is_instance(Node), p.is_null)}
-  greater_neighbor: {is_valid: p.disjoin(p.is_instance(Node), p.is_null)}
-  key: {is_valid: p.is_defined}
-  k: {is_valid: p.is_non_negative_number}
-  i: {is_valid: p.is_non_negative_number, initial_value: 0}
-  distance: {is_valid: p.is_function}
+  node: {}
+  lesser_neighbor: {}
+  greater_neighbor: {}
+  key: {}
+  k: {}
+  i: {initial_value: 0}
+  distance: {}
 })
 
 Entity.def_toString(NearestNeighborIterator)

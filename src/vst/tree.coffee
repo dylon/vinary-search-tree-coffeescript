@@ -28,16 +28,9 @@ else
 
 class Tree extends Entity
   constructor: (subtypes=[]) ->
-    if this.constructor is Tree
-      throw new Error("vst.Tree should not be instantiated directly")
-    if subtypes.length is 0
-      throw new Error("You must specify the subtype as an array to this constructor")
     subtypes.push(Tree)
     super(subtypes)
   is_node_type: (node) -> node instanceof @NodeType()
-  assert_is_node_type: (node) ->
-    f.assert @is_node_type(node),
-      "Expected #{f.to_string node} to be a #{@NodeType().name}"
   height: () ->
     if p.is_defined(@root())
       @root().height()
@@ -45,18 +38,15 @@ class Tree extends Entity
       0
   greatest: (node=@root()) ->
     return null if node is null
-    @assert_is_node_type(node)
     while node.greater_child()
       node = node.greater_child()
     node
   least: (node=@root()) ->
     return null if node is null
-    @assert_is_node_type(node)
     while node.lesser_child()
       node = node.lesser_child()
     node
   try_insert: (key, value) ->
-    f.assert p.is_defined(key)
     if p.is_null @root()
       @root @NodeType().of(key, value)
       @size(@size() + 1)
@@ -68,7 +58,6 @@ class Tree extends Entity
     else
       false
   insert: (key, value) ->
-    f.assert p.is_defined(key)
     if @root() is null
       @root @NodeType().of(key, value)
     else if node = @find(key)
@@ -78,10 +67,8 @@ class Tree extends Entity
     @size(@size() + 1)
     this
   contains_key: (key) ->
-    f.assert p.is_defined(key)
     null isnt @find(key)
   find: (key) ->
-    f.assert p.is_defined(key)
     node = @root()
     while node
       comp = @comparator()(key, node.key())
@@ -93,7 +80,6 @@ class Tree extends Entity
         break
     node
   find_nearest: (key) ->
-    f.assert p.is_defined(key)
     node = @root()
     while node
       comp = @comparator()(key, node.key())
@@ -107,19 +93,16 @@ class Tree extends Entity
         break
     node
   find_nearest_gte: (key) ->
-    f.assert p.is_defined(key)
     node = @find_nearest(key)
     while node and @comparator()(node.key(), key) < 0
       node = node.greater_neighbor()
     node
   find_nearest_lte: (key) ->
-    f.assert p.is_defined(key)
     node = @find_nearest(key)
     while node and @comparator()(node.key(), key) > 0
       node = node.lesser_neighbor()
     node
   remove: (key, value) ->
-    f.assert p.is_defined(key)
     if node = @find(key)
       if p.is_defined(value)
         for candidate, index in node.values()
@@ -155,14 +138,9 @@ class Tree extends Entity
       fn(node)
     this
   range: (lower, upper) ->
-    f.assert @comparator()(lower, upper) <= 0,
-      "Expected lower:#{f.to_string lower} <= upper:#{f.to_string upper}"
     node = @find_nearest_gte(lower)
     RangeIterator.of(node, upper, @comparator())
   neighbors: (key, n_lesser, n_greater) ->
-    f.assert p.is_defined(key)
-    f.assert p.is_non_negative_number(n_lesser)
-    f.assert p.is_non_negative_number(n_greater)
     if node = @find_nearest(key)
       comp = @comparator()(node.key(), key)
       if (least = if comp < 0 then node else node.lesser_neighbor())
@@ -183,9 +161,6 @@ class Tree extends Entity
     else
       RangeIterator.empty()
   nearest_neighbors: (key, k, distance) ->
-    f.assert p.is_defined(key)
-    f.assert p.is_non_negative_number(k)
-    f.assert p.is_function(distance) and distance.length is 2
     if node = @find_nearest(key)
       NearestNeighborIterator.of(node, key, k, distance)
     else
@@ -197,24 +172,10 @@ Entity.def_abstract_methods(Tree, {
 })
 
 Entity.def_properties(Tree, {
-  comparator: {
-    is_valid: p.disjoin(
-      p.conjoin(p.is_function, p.has_arity(2)),
-      p.is_undefined
-    )
-  }
-  size: {initial_value: 0, is_valid: p.is_non_negative_number}
-  NodeType: {is_valid: p.disjoin(p.is_type(Node), p.is_undefined)}
-  root: {
-    initial_value: null
-    is_valid: p.disjoin(
-      p.is_null,
-      p.conjoin(
-        p.is_instance(Node),
-        Tree::is_node_type
-      )
-    )
-  }
+  comparator: {}
+  size: {initial_value: 0}
+  NodeType: {}
+  root: {initial_value: null}
 })
 
 global.vst ||= {}

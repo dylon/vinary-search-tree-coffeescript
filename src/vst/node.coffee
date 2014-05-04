@@ -16,10 +16,6 @@ else
 
 class Node extends Entity
   constructor: (subtypes=[]) ->
-    if this.constructor is Node
-      throw new Error("vst.Node should not be instantiated directly")
-    if subtypes.length is 0
-      throw new Error("You must specify the subtype as an array to this constructor")
     subtypes.push(Node)
     super(subtypes)
   is_leaf: () -> @lesser_child() is null and @greater_child() is null
@@ -33,28 +29,23 @@ class Node extends Entity
       throw new Error("There are multiple values, please use Node::values() instead.")
 
 Entity.def_properties(Node, {
-  key: {is_valid: p.tautology}
-  values: {is_valid: p.is_array, init: () -> []}
+  key: {}
+  values: {init: () -> []}
   height: {
     initial_value: 0
-    is_valid: p.is_non_negative_number
   }
   greater_child: {
     initial_value: null
-    is_valid: p.disjoin(p.is_null, p.is_instance(Node))
   }
   lesser_child: {
     initial_value: null
-    is_valid: p.disjoin(p.is_null, p.is_instance(Node))
   }
   greater_neighbor: {
     initial_value: null
-    is_valid: p.disjoin(p.is_null, p.is_instance(Node))
     stringify: false #-> avoid circular deps in toString() ...
   }
   lesser_neighbor: {
     initial_value: null
-    is_valid: p.disjoin(p.is_null, p.is_instance(Node))
     stringify: false #-> avoid circular deps in toString() ...
   }
 })

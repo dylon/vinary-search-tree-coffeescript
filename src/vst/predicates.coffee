@@ -6,18 +6,6 @@ global =
   else
     this
 
-assert = (truth, message) ->
-  unless p.is_boolean(truth)
-    throw new Error("Expected truth=#{truth} to be a boolean")
-  unless p.is_undefined(message) or p.is_string(message)
-    throw new Error("Expected message=#{message} to be a string")
-  if truth is false
-    if message
-      throw new Error("Assertion error: #{message}")
-    else
-      throw new Error("Assertion error")
-  true
-
 p = predicates = {
   tautology: () -> true
   contradiction: () -> false
@@ -37,44 +25,31 @@ p = predicates = {
   is_array: (value) -> p.is_object(value) and p.is_non_negative_number(value.length)
   # Factories
   has_arity: (n) ->
-    assert p.is_non_negative_number(n)
     (fn) -> fn.length is n
   is_instance: (type) ->
-    assert p.is_function(type)
     (instance) -> instance instanceof type
   is_type: (type) ->
-    assert p.is_function(type)
     (subtype) -> p.is_function(subtype) and subtype.prototype instanceof type
   is_bounded: (lower, upper) ->
-    assert p.is_number(lower) and p.is_number(upper)
     (value) -> p.is_number(value) and lower <= value <= upper
   is_lt: (n) ->
-    assert p.is_number(n)
     (value) -> p.is_number(value) and value < n
   is_lte: (n) ->
-    assert p.is_number(n)
     (value) -> p.is_number(value) and value <= n
   is_eq: (n) ->
-    assert p.is_number(n)
     (value) -> p.is_number(value) and value is n
   is_gte: (n) ->
-    assert p.is_number(n)
     (value) -> p.is_number(value) and value >= n
   is_gt: (n) ->
-    assert p.is_number(n)
     (value) -> p.is_number(value) and value > n
   is_equal: (target) -> (value) -> value is target
   there_exists: (is_valid) ->
-    assert p.is_function(is_valid)
     (elements) ->
-      assert p.is_array(elements)
       for element in elements
         return true if is_valid.call(this, element) is true
       false
   for_all: (is_valid) ->
-    assert p.is_function(is_valid)
     (elements) ->
-      assert p.is_array(elements)
       for element in elements
         return false if is_valid.call(this, element) is false
       true
